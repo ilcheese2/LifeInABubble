@@ -1,10 +1,10 @@
 {
-  "block.detached_times.bubble_workshop": "Bubble Workshop",
-  "item.detached_times.bubble": "Bubble",
-  "menu.detached_times.workshop.title": "Bubble Workshop",
-  "menu.detached_times.workshop.range": "Range ",
-  "menu.detached_times.workshop.speed": "Speed ",
-  "menu.detached_times.workshop.changes_time": "Changes Time ",
-  "menu.detached_times.workshop.shaders": "Shaders",
-  "menu.detached_times.workshop.uniforms": "Uniforms"
+  "block.bubblelife.bubble_workshop": "Bubble Workshop",
+  "item.bubblelife.bubble": "Bubble",
+  "menu.bubblelife.workshop.title": "Bubble Workshop",
+  "menu.bubblelife.workshop.range": "Range ",
+  "menu.bubblelife.workshop.speed": "Speed ",
+  "menu.bubblelife.workshop.changes_time": "Changes Time ",
+  "menu.bubblelife.workshop.shaders": "Shaders",
+  "menu.bubblelife.workshop.uniforms": "Uniforms"
 }

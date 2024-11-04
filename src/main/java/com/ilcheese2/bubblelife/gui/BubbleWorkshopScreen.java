@@ -1,6 +1,6 @@
 package com.ilcheese2.bubblelife.gui;
 
-import com.ilcheese2.bubblelife.DetachedTimes;
+import com.ilcheese2.bubblelife.BubbleLife;
 import com.ilcheese2.bubblelife.bubbles.BubbleInfo;
 import com.ilcheese2.bubblelife.datapacks.BubbleShader;
 import com.ilcheese2.bubblelife.datapacks.BubbleUniform;
@@ -30,7 +30,9 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -40,14 +42,14 @@ public class BubbleWorkshopScreen extends AbstractContainerScreen<BubbleWorkshop
 
     protected @NotNull OwoUIAdapter<ParentComponent> uiAdapter = null;
     protected boolean invalid = false;
-    private final ResourceLocation background = ResourceLocation.fromNamespaceAndPath(DetachedTimes.MODID, "textures/gui/workshop.png");
+    private final ResourceLocation background = ResourceLocation.fromNamespaceAndPath(BubbleLife.MODID, "textures/gui/workshop.png");
     private Consumer<BubbleInfo> subscriber = (info) -> {};
     private final Consumer<ItemStack> listener = (itemStack) -> {
         if (itemStack.isEmpty()) {
             BubbleWorkshopScreen.this.subscriber.accept(null);
             return;
         }
-        var info = itemStack.get(DetachedTimes.BUBBLE_INFO);
+        var info = itemStack.get(BubbleLife.BUBBLE_INFO);
         if (info != null) {
             BubbleWorkshopScreen.this.subscriber.accept(info);
         }
@@ -97,7 +99,37 @@ public class BubbleWorkshopScreen extends AbstractContainerScreen<BubbleWorkshop
         var shaderScroll = Containers.horizontalScroll(Sizing.fixed(120), Sizing.fixed(24), shaderContainer).scrollbar(ScrollContainer.Scrollbar.vanillaFlat()).horizontalAlignment(HorizontalAlignment.LEFT)
                 .verticalAlignment(VerticalAlignment.BOTTOM);
         List<ButtonComponent> components = new ArrayList<>();
+
+        var shaderContainer2 = Containers.horizontalFlow(Sizing.content(), Sizing.content());
+        var shaderScroll2 = Containers.horizontalScroll(Sizing.fixed(120), Sizing.fixed(24), shaderContainer2).scrollbar(ScrollContainer.Scrollbar.vanillaFlat()).horizontalAlignment(HorizontalAlignment.LEFT)
+                .verticalAlignment(VerticalAlignment.BOTTOM);
+        List<ButtonComponent> components2 = new ArrayList<>();
         var uniformContainer = Containers.verticalFlow(Sizing.expand(), Sizing.content());
+        var uniformContainer2 = Containers.verticalFlow(Sizing.expand(), Sizing.content());
+
+        for (var entry : CustomBubbleShaders.POST_SHADERS.entrySet()) {
+            var shaderButton = Components.button(Component.literal(entry.getKey()), onInputChange((component, builder) -> {
+                uniformContainer2.clearChildren();
+                component.active(false);
+                for (ButtonComponent buttonComponent : components2) {
+                    if (buttonComponent != component) {
+                        buttonComponent.active(true);
+                    }
+                }
+                CustomBubbleShaders.getPostShaderInfo(entry.getKey()).uniforms.forEach((name, uniform) -> {
+                    var uniformRow = makeUniformInput2(97, name, getBubbleInfo(), uniform);
+                    uniformContainer2.child(uniformRow);
+                    if (!uniformContainer2.children().isEmpty()) {
+                        uniformContainer2.child(0, Components.label(Component.translatable("menu.bubblelife.workshop.uniforms")).color(Color.ofArgb(4210752)));
+                    }
+                });
+                return builder.postShader(entry.getKey());
+            }));
+            components2.add(shaderButton);
+            shaderContainer2.child((io.wispforest.owo.ui.core.Component) shaderButton);
+        }
+
+
 
         for (BubbleShader shader : CustomBubbleShaders.SHADERS) {
             var shaderButton = Components.button(Component.literal(shader.name), onInputChange((component, builder) -> {
@@ -112,7 +144,7 @@ public class BubbleWorkshopScreen extends AbstractContainerScreen<BubbleWorkshop
                     var uniformRow = makeUniformInput(97, uniform, getBubbleInfo(), uniform.size);
                     uniformContainer.child(uniformRow);
                     if (!uniformContainer.children().isEmpty()) {
-                        uniformContainer.child(0, Components.label(Component.translatable("menu.detached_times.workshop.uniforms")).color(Color.ofArgb(4210752)));
+                        uniformContainer.child(0, Components.label(Component.translatable("menu.bubblelife.workshop.uniforms")).color(Color.ofArgb(4210752)));
                     }
                 });
                 return builder.shader(shader.name);
@@ -121,52 +153,71 @@ public class BubbleWorkshopScreen extends AbstractContainerScreen<BubbleWorkshop
             shaderContainer.child((io.wispforest.owo.ui.core.Component) shaderButton);
         }
         AtomicReference<String> prevShader = new AtomicReference<>("");
+        AtomicReference<String> prevShader2 = new AtomicReference<>("");
         subscriber = ((info) -> {
             if (info == null) {
                 range.text("");
                 speed.text("");
                 changesTime.checked(false);
                 components.forEach((button) -> button.active(true));
+                components2.forEach((button) -> button.active(true));
                 uniformContainer.clearChildren();
+                uniformContainer2.clearChildren();
                 prevShader.set("");
+                prevShader2.set("");
                 return;
             }
             range.text(Integer.toString(info.range()));
             speed.text(Integer.toString((int) info.speed()));
             changesTime.checked(info.changesTime());
             components.forEach((button) -> button.active(!button.getMessage().getString().equals(info.shader())));
-            if (prevShader.get().equals(info.shader())) return;
-            prevShader.set(info.shader());
-            uniformContainer.clearChildren();
-            CustomBubbleShaders.getShader(info.shader()).uniforms.forEach((name, uniform) -> {
-                var uniformRow = makeUniformInput(97, uniform, info, uniform.size);
-                uniformContainer.child(uniformRow);
-            });
-            if (!uniformContainer.children().isEmpty()) {
-                uniformContainer.child(0, Components.label(Component.translatable("menu.detached_times.workshop.uniforms")).color(Color.ofArgb(4210752)));
+            components2.forEach((button) -> button.active(!button.getMessage().getString().equals(info.shader())));
+            if (!prevShader.get().equals(info.shader())) {
+                prevShader.set(info.shader());
+                uniformContainer.clearChildren();
+                CustomBubbleShaders.getShader(info.shader()).uniforms.forEach((name, uniform) -> {
+                    var uniformRow = makeUniformInput(97, uniform, info, uniform.size);
+                    uniformContainer.child(uniformRow);
+                });
+                if (!uniformContainer.children().isEmpty()) {
+                    uniformContainer.child(0, Components.label(Component.translatable("menu.bubblelife.workshop.uniforms")).color(Color.ofArgb(4210752)));
+                }
+            }
+            if (!prevShader2.get().equals(info.postShader())) {
+                prevShader2.set(info.postShader());
+                uniformContainer2.clearChildren();
+                CustomBubbleShaders.getPostShaderInfo(info.postShader()).uniforms.forEach((name, uniform) -> {
+                    var uniformRow = makeUniformInput2(97, name, info, uniform);
+                    uniformContainer2.child(uniformRow);
+                });
+                if (!uniformContainer2.children().isEmpty()) {
+                    uniformContainer2.child(0, Components.label(Component.translatable("menu.bubblelife.workshop.uniforms")).color(Color.ofArgb(4210752)));
+                }
             }
         });
 
         subscriber.accept(getBubbleInfo());
 
-        vert.child(makeInputRow(97, Component.translatable("menu.detached_times.workshop.speed"), speed))
-                .child(makeInputRow(97, Component.translatable("menu.detached_times.workshop.range"), range))
-                .child(makeInputRow(97, Component.translatable("menu.detached_times.workshop.changes_time"), changesTime))
-                .child(Components.label(Component.translatable("menu.detached_times.workshop.shaders")).color(Color.ofArgb(4210752)))
+        vert.child(makeInputRow(97, Component.translatable("menu.bubblelife.workshop.speed"), speed))
+                .child(makeInputRow(97, Component.translatable("menu.bubblelife.workshop.range"), range))
+                .child(makeInputRow(97, Component.translatable("menu.bubblelife.workshop.changes_time"), changesTime))
+                .child(Components.label(Component.translatable("menu.bubblelife.workshop.shaders")).color(Color.ofArgb(4210752)))
                 .child(Containers.horizontalFlow(Sizing.expand(96), Sizing.content()).child(shaderScroll))
+                .child(Components.label(Component.translatable("menu.bubblelife.workshop.post_shaders")).color(Color.ofArgb(4210752)))
+                .child(Containers.horizontalFlow(Sizing.expand(96), Sizing.content()).child(shaderScroll2))
                 .child(uniformContainer);
     }
 
     private BubbleInfo getBubbleInfo() {
-        return menu.getSlot(0).getItem().get(DetachedTimes.BUBBLE_INFO);
+        return menu.getSlot(0).getItem().get(BubbleLife.BUBBLE_INFO);
     }
 
     private <T> Consumer<T> onInputChange(BiFunction<T, BubbleInfo.Builder, BubbleInfo.Builder> builder) {
         return (value) -> {
             ItemStack item = menu.blockEntity.getItem(0);
-            var info = item.get(DetachedTimes.BUBBLE_INFO);
-            if (info != null) {item.set(DetachedTimes.BUBBLE_INFO, builder.apply(value, new BubbleInfo.Builder(info)).build());
-                minecraft.player.connection.send(new UpdateBubblePacket(item.get(DetachedTimes.BUBBLE_INFO)));
+            var info = item.get(BubbleLife.BUBBLE_INFO);
+            if (info != null) {item.set(BubbleLife.BUBBLE_INFO, builder.apply(value, new BubbleInfo.Builder(info)).build());
+                minecraft.player.connection.send(new UpdateBubblePacket(item.get(BubbleLife.BUBBLE_INFO)));
             }
         };
     }
@@ -205,6 +256,38 @@ public class BubbleWorkshopScreen extends AbstractContainerScreen<BubbleWorkshop
                 }
             }).accept(s));
             input.text(values[i].toString());
+            layout.child((io.wispforest.owo.ui.core.Component) input);
+        }
+        return layout;
+    }
+
+    private FlowLayout makeUniformInput2(int width, String uniformName,  BubbleInfo info, int size) {
+        Float[] values;
+        if (info == null || !info.postUniforms().containsKey(uniformName)) {
+            values = new Float[size];
+        } else {
+            values = info.postUniforms().get(uniformName).toArray(Float[]::new);
+        }
+        var layout = (FlowLayout) Containers.horizontalFlow(Sizing.expand(width), Sizing.content())
+                .child(Components.label(Component.literal(uniformName)).color(Color.ofArgb(4210752)))
+                .alignment(HorizontalAlignment.LEFT, VerticalAlignment.CENTER);
+        for (int i = 0; i < size; i++) {
+            int finalI = i;
+            var input = new FloatTextBoxComponent(Sizing.expand(100/size));
+            input.onChanged().subscribe((s) -> this.<String>onInputChange((value, builder) -> {
+                try {
+                    values[finalI] = Float.parseFloat(value);
+                    if (Arrays.stream(values).anyMatch(Objects::isNull)) {
+                        return builder;
+                    }
+                    return builder.postUniform(uniformName,  List.of(values));
+                } catch (NumberFormatException e) {
+                    return builder;
+                }
+            }).accept(s));
+            if (values[i] != null) {
+                input.text(values[i].toString());
+            }
             layout.child((io.wispforest.owo.ui.core.Component) input);
         }
         return layout;

@@ -47,15 +47,15 @@ import org.slf4j.Logger;
 
 import java.util.function.Supplier;
 
-@Mod(DetachedTimes.MODID)
-public class DetachedTimes {
-    public static final String MODID = "detached_times";
+@Mod(BubbleLife.MODID)
+public class BubbleLife {
+    public static final String MODID = "bubblelife";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
-    public static final DeferredBlock<Block> BUBBLE_WORKSHOP_BLOCK = BLOCKS.registerBlock("bubble_workshop", BubbleWorkshopBlock::new, BlockBehaviour.Properties.of());
+    public static final DeferredBlock<Block> BUBBLE_WORKSHOP_BLOCK = BLOCKS.registerBlock("bubble_workshop", BubbleWorkshopBlock::new, BlockBehaviour.Properties.of().noOcclusion());
 
-    public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, DetachedTimes.MODID);
+    public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, BubbleLife.MODID);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BubbleInfo>> BUBBLE_INFO = DATA_COMPONENTS.registerComponentType(
             "bubble_info",
             builder -> builder
@@ -64,7 +64,6 @@ public class DetachedTimes {
     );
 
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-    public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerItem("example_item", TimeItem::new, new Item.Properties().food(new FoodProperties.Builder().alwaysEdible().nutrition(1).saturationModifier(2f).build()));
     public static final DeferredItem<Item> BUBBLE_ITEM = ITEMS.registerItem("bubble", (properties) -> new BubbleItem(
             new Item.Properties().stacksTo(1).component(BUBBLE_INFO::value, new BubbleInfo())
     ));
@@ -78,24 +77,24 @@ public class DetachedTimes {
                     )
                     .build(MODID + ":bubble"));
 
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, DetachedTimes.MODID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, BubbleLife.MODID);
     public static final Supplier<BlockEntityType<BubbleWorkshopBlockEntity>> BUBBLE_WORKSHOP_BLOCK_ENTITY = BLOCK_ENTITIES.register(
             "bubble_workshop",
             () -> BlockEntityType.Builder.of(
                             BubbleWorkshopBlockEntity::new,
-                            DetachedTimes.BUBBLE_WORKSHOP_BLOCK.get()
+                            BubbleLife.BUBBLE_WORKSHOP_BLOCK.get()
                     )
                     .build(null)
     );
 
-    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, DetachedTimes.MODID);
+    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, BubbleLife.MODID);
     public static final Supplier<MenuType<BubbleWorkshopMenu>> BUBBLE_WORKSHOP_MENU = MENU_TYPES.register("bubble_workshop", () -> IMenuTypeExtension.create((containerId, playerInventory, byteBuf) -> {
         Level level = playerInventory.player.level();
         BlockPos pos = byteBuf.readBlockPos();
         return new BubbleWorkshopMenu(containerId, playerInventory, level, pos);
     }));
 
-    public static final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, DetachedTimes.MODID);
+    public static final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, BubbleLife.MODID);
     public static final EntityDataSerializer<BubbleInfo> BUBBLE_INFO_SERIALIZER = EntityDataSerializer.forValueType(BubbleInfo.STREAM_CODEC);
 
     static {
@@ -105,7 +104,7 @@ public class DetachedTimes {
 
     private static BubbleControllerServer controller;
 
-    public DetachedTimes(IEventBus modEventBus, ModContainer modContainer) {
+    public BubbleLife(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
         BLOCKS.register(modEventBus);
         DATA_COMPONENTS.register(modEventBus);
@@ -115,12 +114,12 @@ public class DetachedTimes {
         MENU_TYPES.register(modEventBus);
         ENTITY_DATA_SERIALIZERS.register(modEventBus);
 
-        DetachedTimesAttachments.register(modEventBus);
+        BubbleLifeAttachments.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::register);
 
-        modContainer.registerConfig(ModConfig.Type.COMMON, DetachedTimesConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, BubbleLifeConfig.SPEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -154,7 +153,4 @@ public class DetachedTimes {
         registrar.playBidirectional(RewindPacket.TYPE, RewindPacket.STREAM_CODEC, RewindPacket::onRewindPacket);
         registrar.playToServer(UpdateBubblePacket.TYPE, UpdateBubblePacket.STREAM_CODEC, UpdateBubblePacket::onUpdateBubblePacket);
     }
-
-
-
 }

@@ -1,6 +1,6 @@
 package com.ilcheese2.bubblelife.bubbles.workshop;
 
-import com.ilcheese2.bubblelife.DetachedTimes;
+import com.ilcheese2.bubblelife.BubbleLife;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -15,7 +15,7 @@ public class BubbleWorkshopBlockEntity extends BlockEntity implements Container 
     private ItemStack item = ItemStack.EMPTY;
 
     public BubbleWorkshopBlockEntity(BlockPos pos, BlockState blockState) {
-        super(DetachedTimes.BUBBLE_WORKSHOP_BLOCK_ENTITY.get(), pos, blockState);
+        super(BubbleLife.BUBBLE_WORKSHOP_BLOCK_ENTITY.get(), pos, blockState);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class BubbleWorkshopBlockEntity extends BlockEntity implements Container 
 
     @Override
     public boolean canPlaceItem(int slot, ItemStack stack) {
-        return stack.is(DetachedTimes.BUBBLE_ITEM.get());
+        return stack.is(BubbleLife.BUBBLE_ITEM.get());
     }
 
     @Override

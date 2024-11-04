@@ -1,6 +1,6 @@
 package com.ilcheese2.bubblelife.client;
 
-import com.ilcheese2.bubblelife.DetachedTimes;
+import com.ilcheese2.bubblelife.BubbleLife;
 import com.ilcheese2.bubblelife.bubbles.BubbleController;
 import com.ilcheese2.bubblelife.datapacks.CustomBubbleShaders;
 import com.ilcheese2.bubblelife.bubbles.Bubble;
@@ -16,7 +16,6 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Arrays;
 
 public class BubbleControllerClient extends BubbleController {
     private static BubbleControllerClient instance;
@@ -60,8 +59,8 @@ public class BubbleControllerClient extends BubbleController {
     }
 
     public void updateShader() {
-        if (DetachedTimesClient.bubbleShader == null || dataTexture == 0) return;
-        EffectInstance effect = ((PostChainAccessor) DetachedTimesClient.bubbleShader).getPasses().getFirst().getEffect();
+        if (BubbleLifeClient.bubbleShader == null || dataTexture == 0) return;
+        EffectInstance effect = ((PostChainAccessor) BubbleLifeClient.bubbleShader).getPasses().getFirst().getEffect();
 
         var offsetsUniform = effect.safeGetUniform("BubbleOffsets");
         IntBuffer intBuffer = ((UniformAccessor) offsetsUniform).getIntValues();
@@ -102,19 +101,6 @@ public class BubbleControllerClient extends BubbleController {
         }
 
 
-        float[] data = new float[bubbleData.position()];
-        var c = bubbleData.duplicate();
-        c.rewind();
-
-        c.get(data);
-
-        //bubbleData.rewind();
-        DetachedTimes.LOGGER.info("Bubble data: " + Arrays.toString(data) + " something: " + bubbleData.position());
-//        bubbleData.clear();
-//        bubbleData.put(0);
-//        bubbleData.put(1);
-//        bubbleData.put(0);
-//        bubbleData.put(1);
         bubbleData.rewind();
         GL11.glBindTexture(GL11.GL_TEXTURE_1D, dataTexture);
         GL11.glTexImage1D(GL11.GL_TEXTURE_1D, 0, GL30.GL_RGBA32F, i/4, 0, GL11.GL_RGBA, GL11.GL_FLOAT, bubbleData);

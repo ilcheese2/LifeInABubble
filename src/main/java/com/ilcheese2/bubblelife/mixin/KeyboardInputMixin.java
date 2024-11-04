@@ -1,6 +1,6 @@
 package com.ilcheese2.bubblelife.mixin;
 
-import com.ilcheese2.bubblelife.DetachedTimesAttachments;
+import com.ilcheese2.bubblelife.BubbleLifeAttachments;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.KeyboardInput;
@@ -14,7 +14,7 @@ public class KeyboardInputMixin {
 
     @Inject(method = "tick", at = @At("RETURN"))
     void overrideInput(boolean isSneaking, float sneakingSpeedMultiplier, CallbackInfo ci) {
-        if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.getData(DetachedTimesAttachments.REWIND)) {
+        if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.getData(BubbleLifeAttachments.REWIND)) {
             var input = (Input) (Object) this;
             input.up = false;
             input.down = false;

@@ -1,7 +1,7 @@
 package com.ilcheese2.bubblelife.bubbles;
 
-import com.ilcheese2.bubblelife.DetachedTimesConfig;
-import com.ilcheese2.bubblelife.DetachedTimes;
+import com.ilcheese2.bubblelife.BubbleLifeConfig;
+import com.ilcheese2.bubblelife.BubbleLife;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -23,7 +23,7 @@ public class BubbleItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        tooltipComponents.add(Component.literal(stack.get(DetachedTimes.BUBBLE_INFO.get()).toString()));
+        tooltipComponents.add(Component.literal(stack.get(BubbleLife.BUBBLE_INFO.get()).toString()));
     }
 
     @Override
@@ -31,11 +31,11 @@ public class BubbleItem extends Item {
         if (!level.isClientSide) {
             Bubble bubble = BubbleControllerServer.instance().ownsBubble(player);
             if (bubble == null) {
-                if (!player.getCooldowns().isOnCooldown(this) && !BubbleControllerServer.instance().inBubblePosition(player.position())) {
-                    var newBubble = new Bubble(level, player.getItemInHand(usedHand).get(DetachedTimes.BUBBLE_INFO), player);
+                if (!player.getCooldowns().isOnCooldown(this) && BubbleControllerServer.instance().inBubblePosition(player.position()) == null) {
+                    var newBubble = new Bubble(level, player.getItemInHand(usedHand).get(BubbleLife.BUBBLE_INFO), player);
                     newBubble.setPos(player.position());
                     level.addFreshEntity(newBubble);
-                    player.getCooldowns().addCooldown(this, DetachedTimesConfig.BUBBLE_COOLDOWN.get());
+                    player.getCooldowns().addCooldown(this, BubbleLifeConfig.BUBBLE_COOLDOWN.get());
                 }
             } else {
                 bubble.discard();

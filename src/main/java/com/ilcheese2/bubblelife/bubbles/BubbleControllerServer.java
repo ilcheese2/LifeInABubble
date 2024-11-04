@@ -1,6 +1,6 @@
 package com.ilcheese2.bubblelife.bubbles;
 
-import com.ilcheese2.bubblelife.DetachedTimesAttachments;
+import com.ilcheese2.bubblelife.BubbleLifeAttachments;
 import com.ilcheese2.bubblelife.networking.RewindPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,7 +40,7 @@ public class BubbleControllerServer extends BubbleController {
 
         runOnMainThread(() -> {
             PacketDistributor.sendToPlayer(player2, new RewindPacket(true));
-            player2.setData(DetachedTimesAttachments.REWIND, true);
+            player2.setData(BubbleLifeAttachments.REWIND, true);
             player2.setDeltaMovement(Vec3.ZERO);
         });
     }

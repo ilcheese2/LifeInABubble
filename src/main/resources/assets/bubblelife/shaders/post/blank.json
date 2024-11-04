@@ -4,11 +4,9 @@
   ],
   "passes": [
     {
-      "name": "detached_times:bubble",
+      "name": "bubblelife:blank",
       "intarget": "minecraft:main",
-      "outtarget": "swap",
-      "uniforms": [
-      ]
+      "outtarget": "swap"
     },
     {
       "name": "blit",

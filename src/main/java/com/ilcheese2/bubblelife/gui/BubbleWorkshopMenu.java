@@ -1,6 +1,6 @@
 package com.ilcheese2.bubblelife.gui;
 
-import com.ilcheese2.bubblelife.DetachedTimes;
+import com.ilcheese2.bubblelife.BubbleLife;
 import com.ilcheese2.bubblelife.bubbles.workshop.BubbleWorkshopBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,7 +19,7 @@ public class BubbleWorkshopMenu extends AbstractContainerMenu {
 
     // Server menu constructor
     public BubbleWorkshopMenu(int containerId, Inventory playerInventory, Level level, BlockPos pos) {
-        super(DetachedTimes.BUBBLE_WORKSHOP_MENU.get(), containerId);
+        super(BubbleLife.BUBBLE_WORKSHOP_MENU.get(), containerId);
         blockEntity = (BubbleWorkshopBlockEntity) level.getBlockEntity(pos);
         this.addSlot(new Slot(blockEntity, 0, 15, 17) {
             @Override

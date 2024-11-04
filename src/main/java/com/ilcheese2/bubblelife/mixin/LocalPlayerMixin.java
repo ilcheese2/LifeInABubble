@@ -1,7 +1,7 @@
 package com.ilcheese2.bubblelife.mixin;
 
-import com.ilcheese2.bubblelife.DetachedTimesAttachments;
-import com.ilcheese2.bubblelife.DetachedTimesConfig;
+import com.ilcheese2.bubblelife.BubbleLifeAttachments;
+import com.ilcheese2.bubblelife.BubbleLifeConfig;
 import com.ilcheese2.bubblelife.Utils;
 import com.ilcheese2.bubblelife.networking.RewindPacket;
 import net.minecraft.client.Minecraft;
@@ -27,12 +27,12 @@ public class LocalPlayerMixin {
 
     @Inject(method = "tick", at = @At("HEAD"))
     void movePlayer(CallbackInfo ci) {
-        if (((Entity) (Object) this).getData(DetachedTimesAttachments.REWIND)) {
+        if (((Entity) (Object) this).getData(BubbleLifeAttachments.REWIND)) {
             Entity entity = (Entity) (Object) this;
 
             if (detachedTimes$movements.isEmpty()) {
                 PacketDistributor.sendToServer(new RewindPacket(false));
-                entity.setData(DetachedTimesAttachments.REWIND, false);
+                entity.setData(BubbleLifeAttachments.REWIND, false);
                 return;
             }
 
@@ -52,7 +52,7 @@ public class LocalPlayerMixin {
             var newMovement = new Tuple<>(player.position(), Minecraft.getInstance().level.getGameTime());
             detachedTimes$movements.add(newMovement);
             Utils.filterOrderedList(detachedTimes$movements, (movement) -> {
-                return newMovement.getB() - movement.getB() > DetachedTimesConfig.REWIND_TIME.get();
+                return newMovement.getB() - movement.getB() > BubbleLifeConfig.REWIND_TIME.get();
             });
         }
     }

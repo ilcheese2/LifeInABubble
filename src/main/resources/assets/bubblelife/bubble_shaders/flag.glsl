@@ -1,6 +1,6 @@
 #version 150
 
-vec4 detached_times_flag(vec3 normal) { // namespace_name
+vec4 flag(vec3 normal) { // must be named same as file
     vec4 colors[] = vec4[](vec4(0.95,0.0,0.0,1.0), vec4(1.0,141.0/255.0,0.0,1.0),vec4(1.0,0.95,0.0,1.0),vec4(0.0,129.0/255.0,33.0/255.0,1.0),vec4(0.0,76.0/255.0,1.0,1.0),vec4(118.0/255.0, 1.0/255.0, 136.0/255.0, 1.0));
 
     float pos = 1 - normal.y;

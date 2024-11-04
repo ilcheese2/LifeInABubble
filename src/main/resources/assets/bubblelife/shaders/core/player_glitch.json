@@ -1,6 +1,6 @@
 {
-  "vertex": "detached_times:player_glitch",
-  "fragment": "detached_times:player_glitch",
+  "vertex": "bubblelife:player_glitch",
+  "fragment": "bubblelife:player_glitch",
   "samplers": [
     { "name": "Sampler0" },
     { "name": "Sampler1" },

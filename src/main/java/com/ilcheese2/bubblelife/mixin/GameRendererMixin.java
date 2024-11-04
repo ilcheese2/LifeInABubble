@@ -1,6 +1,6 @@
 package com.ilcheese2.bubblelife.mixin;
 
-import com.ilcheese2.bubblelife.client.DetachedTimesClient;
+import com.ilcheese2.bubblelife.client.BubbleLifeClient;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,6 +12,6 @@ public class GameRendererMixin {
 
     @Inject(method = "resize", at = @At("HEAD"))
     void resizeBubbleChain(int width, int height, CallbackInfo ci) {
-        if (DetachedTimesClient.bubbleShader != null) DetachedTimesClient.bubbleShader.resize(width, height);
+        if (BubbleLifeClient.bubbleShader != null) BubbleLifeClient.bubbleShader.resize(width, height);
     }
 }

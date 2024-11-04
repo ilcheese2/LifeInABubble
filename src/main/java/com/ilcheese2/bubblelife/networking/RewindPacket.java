@@ -1,7 +1,7 @@
 package com.ilcheese2.bubblelife.networking;
 
-import com.ilcheese2.bubblelife.DetachedTimes;
-import com.ilcheese2.bubblelife.DetachedTimesAttachments;
+import com.ilcheese2.bubblelife.BubbleLife;
+import com.ilcheese2.bubblelife.BubbleLifeAttachments;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -12,7 +12,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record RewindPacket(boolean rewinding) implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<RewindPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(DetachedTimes.MODID, "rewind"));
+    public static final CustomPacketPayload.Type<RewindPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(BubbleLife.MODID, "rewind"));
 
     public static final StreamCodec<ByteBuf, RewindPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL,
@@ -26,7 +26,7 @@ public record RewindPacket(boolean rewinding) implements CustomPacketPayload {
     }
 
     public static void onRewindPacket(final RewindPacket packet, final IPayloadContext context) {
-        context.player().setData(DetachedTimesAttachments.REWIND, packet.rewinding());
+        context.player().setData(BubbleLifeAttachments.REWIND, packet.rewinding());
 
         if (packet.rewinding) {
             context.player().setDeltaMovement(Vec3.ZERO); // gravity hack

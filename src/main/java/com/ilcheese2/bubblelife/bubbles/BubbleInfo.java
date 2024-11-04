@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record BubbleInfo(float speed, int range, String shader, boolean changesTime, Map<String, List<Float>> uniforms) {
+public record BubbleInfo(float speed, int range, String shader, boolean changesTime, Map<String, List<Float>> uniforms, String postShader, Map<String, List<Float>> postUniforms) {
 
     private static final Codec<Map<String, List<Float>>> UNIFORM_CODEC = Codec.unboundedMap(Codec.STRING, Codec.list(Codec.FLOAT));
     public static final Codec<BubbleInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -18,25 +18,15 @@ public record BubbleInfo(float speed, int range, String shader, boolean changesT
             Codec.INT.fieldOf("range").forGetter(BubbleInfo::range),
             Codec.STRING.fieldOf("shader").forGetter(BubbleInfo::shader),
             Codec.BOOL.fieldOf("changes_time").forGetter(BubbleInfo::changesTime),
-            UNIFORM_CODEC.fieldOf("uniforms").forGetter(BubbleInfo::uniforms)
+            UNIFORM_CODEC.fieldOf("uniforms").forGetter(BubbleInfo::uniforms),
+            Codec.STRING.fieldOf("postShader").forGetter(BubbleInfo::postShader),
+            UNIFORM_CODEC.fieldOf("postUniforms").forGetter(BubbleInfo::postUniforms)
     ).apply(instance, BubbleInfo::new));
 
-    public static final StreamCodec<ByteBuf, BubbleInfo> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.FLOAT,
-            BubbleInfo::speed,
-            ByteBufCodecs.INT,
-            BubbleInfo::range,
-            ByteBufCodecs.STRING_UTF8,
-            BubbleInfo::shader,
-            ByteBufCodecs.BOOL,
-            BubbleInfo::changesTime,
-            ByteBufCodecs.fromCodec(UNIFORM_CODEC),
-            BubbleInfo::uniforms,
-            BubbleInfo::new
-    );
+    public static final StreamCodec<ByteBuf, BubbleInfo> STREAM_CODEC =  ByteBufCodecs.fromCodec(CODEC);
 
     public BubbleInfo() {
-        this(50, 10, "detached_times:red", true, new HashMap<>());
+        this(50, 10, "bubblelife:red", true, new HashMap<>(), "bubblelife:blank", new HashMap<>());
     }
 
 
@@ -46,12 +36,17 @@ public record BubbleInfo(float speed, int range, String shader, boolean changesT
         private String shader;
         private boolean changesTime;
         private Map<String, List<Float>> uniforms = new HashMap<>();
+        private String postShader;
+        private Map<String, List<Float>> postUniforms = new HashMap<>();
 
         public Builder(BubbleInfo info) {
             this.speed = info.speed();
             this.range = info.range();
             this.shader = info.shader();
             this.changesTime = info.changesTime();
+            this.uniforms = new HashMap<>(info.uniforms);
+            this.postShader = info.postShader();
+            this.postUniforms = new HashMap<>(info.postUniforms);
         }
 
         public Builder speed(float speed) {
@@ -79,8 +74,18 @@ public record BubbleInfo(float speed, int range, String shader, boolean changesT
             return this;
         }
 
+        public Builder postShader(String postShader) {
+            this.postShader = postShader;
+            return this;
+        }
+
+        public Builder postUniform(String name, List<Float> values) {
+            postUniforms.put(name, values);
+            return this;
+        }
+
         public BubbleInfo build() {
-            return new BubbleInfo(speed, range, shader, changesTime, uniforms);
+            return new BubbleInfo(speed, range, shader, changesTime, uniforms, postShader, postUniforms);
         }
     }
 }

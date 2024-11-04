@@ -4,7 +4,7 @@
   ],
   "passes": [
     {
-      "name": "detached_times:bubble",
+      "name": "bubblelife:bubble",
       "intarget": "minecraft:main",
       "outtarget": "swap",
       "uniforms": [

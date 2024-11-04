@@ -30,6 +30,6 @@ public class LevelMixin {
 
     @WrapOperation(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;shouldTickBlocksAt(Lnet/minecraft/core/BlockPos;)Z"))
     boolean cancelBlockEntityTick(Level instance, BlockPos pos, Operation<Boolean> original) {
-        return !BubbleController.inBubblePosition(Vec3.atLowerCornerOf(pos), isClientSide);
+        return (BubbleController.inBubblePosition(Vec3.atLowerCornerOf(pos), isClientSide) == null);
     }
 }

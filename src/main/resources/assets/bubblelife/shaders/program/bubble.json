@@ -5,7 +5,7 @@
     "dstrgb": "1-srcalpha"
   },
   "vertex": "blit",
-  "fragment": "detached_times:bubble",
+  "fragment": "bubblelife:bubble",
   "attributes": [ "Position" ],
   "samplers": [
     { "name": "DiffuseSampler" },

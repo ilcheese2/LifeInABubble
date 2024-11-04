@@ -23,7 +23,7 @@ public class BubbleShader {
             @Override
             public List<String> process(String shaderData) {
                 var builder = new StringBuilder();
-                shaderData = shaderData.replace("%s(vec3 normal)".formatted(shaderName), "%s(vec3 normal, int bubbleOffset)".formatted(shaderName));
+                shaderData = shaderData.replace("%s(vec3 normal)".formatted(name.substring(name.indexOf(":")+1)), "%s(vec3 normal, int bubbleOffset)".formatted(shaderName));
                 var builder2 = new StringBuilder(shaderData);
 
                 if (BubbleShader.this.uniforms != null && !BubbleShader.this.uniforms.isEmpty()) {

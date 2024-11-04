@@ -9,6 +9,13 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+    maven {
+        name = "wispForestReleases"
+        url = uri("https://maven.wispforest.io/releases")
+    }
+    maven {
+        url "https://maven.su5ed.dev/releases"
+    }
 }
 
 base {
@@ -34,7 +41,8 @@ neoForge {
     runs {
         client {
             client()
-
+            programArguments.addAll '--username', 'Player###'
+            //jvmArgument '-Dorg.lwjgl.glfw.libname=C:\\Users\\cheese\\Downloads\\glfw-3.4.bin.WIN64\\glfw-3.4.bin.WIN64\\lib-vc2022\\glfw3.dll'
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
@@ -111,6 +119,11 @@ dependencies {
 
     // Example project dependency using a sister or child project:
     // implementation project(":myproject")
+    implementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:0.104.0+2.0.15+1.21.1"
+    implementation("io.wispforest:owo-lib-neoforge:0.12.15-beta.9+1.21")
+    accessTransformers("io.wispforest:owo-lib-neoforge:0.12.15-beta.9+1.21")
+    interfaceInjectionData("io.wispforest:owo-lib-neoforge:0.12.15-beta.9+1.21")
+
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

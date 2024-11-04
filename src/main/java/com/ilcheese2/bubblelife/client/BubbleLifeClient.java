@@ -1,6 +1,7 @@
 package com.ilcheese2.bubblelife.client;
 
-import com.ilcheese2.bubblelife.DetachedTimes;
+import com.ilcheese2.bubblelife.BubbleLife;
+import com.ilcheese2.bubblelife.bubbles.Bubble;
 import com.ilcheese2.bubblelife.client.render.BubbleRenderer;
 import com.ilcheese2.bubblelife.datapacks.CustomBubbleShaders;
 import com.ilcheese2.bubblelife.gui.BubbleWorkshopMenu;
@@ -23,16 +24,17 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.event.level.LevelEvent;
+import org.apache.commons.lang3.ArrayUtils;
 import org.joml.Matrix4f;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.function.Function;
 
-@Mod(value = DetachedTimes.MODID, dist = Dist.CLIENT)
-public class DetachedTimesClient {
+@Mod(value = BubbleLife.MODID, dist = Dist.CLIENT)
+public class BubbleLifeClient {
 
     public static ShaderInstance playerGlitch;
-    public static ShaderInstance noise;
 
     public static PostChain bubbleShader;
 
@@ -51,7 +53,7 @@ public class DetachedTimesClient {
     );
 
 
-    @EventBusSubscriber(modid = DetachedTimes.MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = BubbleLife.MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
     public static class ClientGameEvents {
         @SubscribeEvent
         private static void onRenderLevel(RenderLevelStageEvent event) {
@@ -65,10 +67,20 @@ public class DetachedTimesClient {
                 if ( bubbleShader != null) {
                     EffectInstance effect = ((PostChainAccessor) bubbleShader).getPasses().getFirst().getEffect();
                     effect.setSampler("DataSampler", () -> BubbleControllerClient.instance().dataTexture);
-//                    GL11.glBindTexture(GL_TEXTURE_1D, BubbleControllerClient.instance().dataTexture);
-//                    GL13.glActiveTexture(GL13.GL_TEXTURE0 + 2);
-//                    GL11.glBindTexture(GL_TEXTURE_1D, 0);
                     bubbleShader.process(event.getPartialTick().getGameTimeDeltaTicks());
+                }
+                Bubble bubble = BubbleControllerClient.instance().inBubblePosition(Minecraft.getInstance().player.position());
+                if (bubble != null) {
+                    PostChain chain = CustomBubbleShaders.getPostShader(bubble.info.postShader());
+                    for (PostPass postpass : ((PostChainAccessor) chain).getPasses()) {
+                        for (var uniform : bubble.info.postUniforms().entrySet()) {
+                            if (uniform.getValue().stream().allMatch(Objects::nonNull)) {
+                                postpass.getEffect().safeGetUniform(uniform.getKey()).set(ArrayUtils.toPrimitive(uniform.getValue().toArray(Float[]::new)));
+                            }
+                        }
+                    }
+
+                    chain.process(event.getPartialTick().getGameTimeDeltaTicks());
                 }
 
                 Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
@@ -89,7 +101,7 @@ public class DetachedTimesClient {
         }
     }
 
-    @EventBusSubscriber(modid = DetachedTimes.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = BubbleLife.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
 
         @SubscribeEvent
@@ -101,24 +113,20 @@ public class DetachedTimesClient {
         public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
             event.registerShader(new ShaderInstance(
                     event.getResourceProvider(),
-                    ResourceLocation.fromNamespaceAndPath(DetachedTimes.MODID, "player_glitch"),
+                    ResourceLocation.fromNamespaceAndPath(BubbleLife.MODID, "player_glitch"),
                     DefaultVertexFormat.NEW_ENTITY), (shader) -> playerGlitch = shader);
-            event.registerShader(new ShaderInstance(
-                    event.getResourceProvider(),
-                    ResourceLocation.fromNamespaceAndPath(DetachedTimes.MODID, "noise"),
-                    DefaultVertexFormat.BLIT_SCREEN), (shader) -> noise = shader);
             BubbleControllerClient.instance().createBuffers();
         }
 
         @SubscribeEvent
         private static void onRegisterEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-            event.registerEntityRenderer(DetachedTimes.BUBBLE.get(), BubbleRenderer::new);
+            event.registerEntityRenderer(BubbleLife.BUBBLE.get(), BubbleRenderer::new);
         }
 
         @SubscribeEvent
         private static void onRegisterScreens(RegisterMenuScreensEvent event) {
             MenuScreens.ScreenConstructor<BubbleWorkshopMenu, BubbleWorkshopScreen> constructor = BubbleWorkshopScreen::new;
-            event.register(DetachedTimes.BUBBLE_WORKSHOP_MENU.get(), constructor);
+            event.register(BubbleLife.BUBBLE_WORKSHOP_MENU.get(), constructor);
         }
     }
 
@@ -131,7 +139,7 @@ public class DetachedTimesClient {
             return;
         }
         try {
-            ResourceLocation location = ResourceLocation.fromNamespaceAndPath(DetachedTimes.MODID, "shaders/post/bubble.json");
+            ResourceLocation location = ResourceLocation.fromNamespaceAndPath(BubbleLife.MODID, "shaders/post/bubble.json");
             Minecraft client = Minecraft.getInstance();
             bubbleShader = new PostChain(client.getTextureManager(), client.getResourceManager(), client.getMainRenderTarget(), location) {
                 @Override
@@ -161,7 +169,7 @@ public class DetachedTimesClient {
 
     }
 
-    public DetachedTimesClient(IEventBus bus) {
+    public BubbleLifeClient(IEventBus bus) {
         bus.addListener((RegisterClientReloadListenersEvent event) -> {
             event.registerReloadListener( new CustomBubbleShaders());
         });

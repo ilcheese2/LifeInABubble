@@ -1,7 +1,7 @@
 package com.ilcheese2.bubblelife.mixin;
 
-import com.ilcheese2.bubblelife.DetachedTimesAttachments;
-import com.ilcheese2.bubblelife.client.DetachedTimesClient;
+import com.ilcheese2.bubblelife.BubbleLifeAttachments;
+import com.ilcheese2.bubblelife.client.BubbleLifeClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderType;
@@ -18,9 +18,9 @@ public class LivingEntityRendererMixin {
 
     @Inject(method = "getRenderType", at = @At("RETURN"), cancellable = true)
     void applyGlitch(LivingEntity livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
-        if (((Object) this instanceof PlayerRenderer renderer) && livingEntity.getData(DetachedTimesAttachments.REWIND)) {
-            cir.setReturnValue(DetachedTimesClient.PLAYER_GLITCH.apply(renderer.getTextureLocation((AbstractClientPlayer) livingEntity)));
-            DetachedTimesClient.playerGlitch.getUniform("GameTime2").set(Minecraft.getInstance().level.getGameTime());
+        if (((Object) this instanceof PlayerRenderer renderer) && livingEntity.getData(BubbleLifeAttachments.REWIND)) {
+            cir.setReturnValue(BubbleLifeClient.PLAYER_GLITCH.apply(renderer.getTextureLocation((AbstractClientPlayer) livingEntity)));
+            BubbleLifeClient.playerGlitch.getUniform("GameTime2").set(Minecraft.getInstance().level.getGameTime());
         }
     }
 }

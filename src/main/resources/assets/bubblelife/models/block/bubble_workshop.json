@@ -1,0 +1,39 @@
+{
+  "credit": "Made with Blockbench",
+  "textures": {
+    "1": "block/amethyst_block",
+    "2": "block/polished_basalt_top",
+    "3": "block/polished_basalt_side",
+    "4": "bubblelife:block/workshop_top"
+  },
+  "render_type": "minecraft:cutout",
+  "elements": [
+    {
+      "from": [2, 0, 2],
+      "to": [14, 5, 14],
+      "rotation": {"angle": 0, "axis": "y", "origin": [1, 0, 1]},
+      "faces": {
+        "north": {"uv": [2, 0, 14, 5], "texture": "#3"},
+        "east": {"uv": [2, 0, 14, 5], "texture": "#3"},
+        "south": {"uv": [2, 0, 14, 5], "texture": "#3"},
+        "west": {"uv": [2, 0, 14, 5], "texture": "#3"},
+        "up": {"uv": [2, 2, 14, 14], "texture": "#2"},
+        "down": {"uv": [2, 2, 14, 14], "texture": "#2"}
+      }
+    },
+    {
+      "from": [3, 5, 3],
+      "to": [13, 7, 13],
+      "rotation": {"angle": 0, "axis": "y", "origin": [6, 5, 7]},
+      "faces": {
+        "north": {"uv": [3, 4, 13, 6], "texture": "#1"},
+        "east": {"uv": [3, 3, 13, 5], "texture": "#1"},
+        "south": {"uv": [3, 5, 13, 7], "texture": "#1"},
+        "west": {"uv": [3, 0, 13, 2], "texture": "#1"},
+        "up": {"uv": [3, 3, 13, 13], "texture": "#4"},
+        "down": {"uv": [0, 0, 10, 10], "texture": "#missing"}
+      }
+    }
+  ],
+  "display": {}
+}

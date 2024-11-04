@@ -1,8 +1,8 @@
 package com.ilcheese2.bubblelife.bubbles;
 
-import com.ilcheese2.bubblelife.DetachedTimes;
-import com.ilcheese2.bubblelife.DetachedTimesAttachments;
-import com.ilcheese2.bubblelife.DetachedTimesConfig;
+import com.ilcheese2.bubblelife.BubbleLife;
+import com.ilcheese2.bubblelife.BubbleLifeAttachments;
+import com.ilcheese2.bubblelife.BubbleLifeConfig;
 import com.ilcheese2.bubblelife.client.BubbleControllerClient;
 import com.ilcheese2.bubblelife.mixin.LevelAccessor;
 import net.minecraft.nbt.CompoundTag;
@@ -29,17 +29,17 @@ public class Bubble extends Entity {
     @Nullable
     public UUID owner;
     private int ticksLeft;
-    private static final EntityDataAccessor<BubbleInfo> BUBBLE_ITEM_ID = SynchedEntityData.defineId(Bubble.class, DetachedTimes.BUBBLE_INFO_SERIALIZER);
+    private static final EntityDataAccessor<BubbleInfo> BUBBLE_ITEM_ID = SynchedEntityData.defineId(Bubble.class, BubbleLife.BUBBLE_INFO_SERIALIZER);
 
     public Bubble(Level level, BubbleInfo info, Player owner) {
-        super(DetachedTimes.BUBBLE.get(), level);
+        super(BubbleLife.BUBBLE.get(), level);
         this.info = info;
         refreshDimensions();
         this.setBoundingBox(makeBoundingBox());
         if (owner != null) {
             this.owner = owner.getUUID();
         }
-        ticksLeft = DetachedTimesConfig.BUBBLE_DURATION.get();
+        ticksLeft = BubbleLifeConfig.BUBBLE_DURATION.get();
         if (!level.isClientSide) {
             this.entityData.set(BUBBLE_ITEM_ID, info);
         }
@@ -134,7 +134,7 @@ public class Bubble extends Entity {
         }
 
         entities = this.level().getEntities(this, this.getBoundingBox(), entity -> {
-            return !(entity instanceof Bubble) && !(entity instanceof Player && !DetachedTimesConfig.AFFECTS_PLAYERS.get()) && !(entity.getUUID().equals(owner)) && entity.distanceTo(this) <= info.range();
+            return !(entity instanceof Bubble) && !(entity instanceof Player && !BubbleLifeConfig.AFFECTS_PLAYERS.get()) && !(entity.getUUID().equals(owner)) && entity.distanceTo(this) <= info.range();
         });
     }
 
@@ -179,7 +179,7 @@ public class Bubble extends Entity {
                     continue;
                 }
 
-                entity.setData(DetachedTimesAttachments.TICK_RESIDUAL, deltaTickResidual);
+                entity.setData(BubbleLifeAttachments.TICK_RESIDUAL, deltaTickResidual);
                 entity.setOldPosAndRot();
                 entity.tickCount++;
                 entity.tick();

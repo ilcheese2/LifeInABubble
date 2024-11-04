@@ -1,7 +1,10 @@
 {
-  "post" : [
-    {"name" : "blank", "uniforms": {
-      "Something": [0, 0]
-    }}
+  "post": [
+    {
+      "name": "blank",
+      "uniforms": [
+        {"name": "Something", "count": 4 }
+      ]
+    }
   ]
 }

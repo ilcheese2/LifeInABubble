@@ -5,7 +5,7 @@
     "dstrgb": "1-srcalpha"
   },
   "vertex": "blit",
-  "fragment": "detached_times:blank",
+  "fragment": "bubblelife:blank",
   "attributes": [ "Position" ],
   "samplers": [
     { "name": "DiffuseSampler" }
@@ -13,6 +13,7 @@
   "uniforms": [
     { "name": "ProjMat",       "type": "matrix4x4", "count": 16, "values": [  ] },
     { "name": "OutSize",       "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
-    { "name": "ColorModulate", "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] }
+    { "name": "ColorModulate", "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] },
+    { "name": "Something", "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] }
   ]
 }

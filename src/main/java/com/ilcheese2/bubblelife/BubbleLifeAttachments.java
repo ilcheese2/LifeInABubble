@@ -7,8 +7,8 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.function.Supplier;
 
-public class DetachedTimesAttachments {
-    private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, DetachedTimes.MODID);
+public class BubbleLifeAttachments {
+    private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, BubbleLife.MODID);
 
     public static final Supplier<AttachmentType<Boolean>> REWIND = ATTACHMENT_TYPES.register(
             "rewind", () -> AttachmentType.builder(() -> false).build()

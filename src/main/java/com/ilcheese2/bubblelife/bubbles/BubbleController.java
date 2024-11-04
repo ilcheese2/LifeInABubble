@@ -99,13 +99,13 @@ public abstract class BubbleController extends ScheduledThreadPoolExecutor {
         return null;
     }
 
-    public boolean inBubblePosition(Vec3 pos) {
+    public Bubble inBubblePosition(Vec3 pos) {
         for (Bubble bubble : bubbles) {
             if (bubble.getBoundingBox().contains(pos)) {
-                return true;
+                return bubble;
             }
         }
-        return false;
+        return null;
     }
 
 
@@ -157,7 +157,7 @@ public abstract class BubbleController extends ScheduledThreadPoolExecutor {
         }
     }
 
-    public static boolean inBubblePosition(Vec3 pos, boolean isClient) {
+    public static Bubble inBubblePosition(Vec3 pos, boolean isClient) {
         if (isClient) {
             return BubbleControllerClient.instance().inBubblePosition(pos);
         } else {

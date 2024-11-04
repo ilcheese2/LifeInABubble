@@ -1,6 +1,6 @@
 package com.ilcheese2.bubblelife.mixin;
 
-import com.ilcheese2.bubblelife.DetachedTimesAttachments;
+import com.ilcheese2.bubblelife.BubbleLifeAttachments;
 import com.ilcheese2.bubblelife.client.BubbleControllerClient;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.world.entity.Entity;
@@ -23,6 +23,6 @@ public class LevelRendererMixin {
         if (!BubbleControllerClient.instance().inBubble(entity)) {
             return;
         }
-        args.set(4, entity.getData(DetachedTimesAttachments.TICK_RESIDUAL));
+        args.set(4, entity.getData(BubbleLifeAttachments.TICK_RESIDUAL));
     }
 }
