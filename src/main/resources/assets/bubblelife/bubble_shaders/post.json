@@ -1,0 +1,7 @@
+{
+  "post" : [
+    {"name" : "blank", "uniforms": {
+      "Something": [0, 0]
+    }}
+  ]
+}
