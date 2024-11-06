@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record BubbleInfo(float speed, int range, String shader, boolean changesTime, Map<String, List<Float>> uniforms, String postShader, Map<String, List<Float>> postUniforms) {
+public record BubbleInfo(int speed, int range, String shader, boolean changesTime, Map<String, List<Float>> uniforms, String postShader, Map<String, List<Float>> postUniforms) {
 
     private static final Codec<Map<String, List<Float>>> UNIFORM_CODEC = Codec.unboundedMap(Codec.STRING, Codec.list(Codec.FLOAT));
     public static final Codec<BubbleInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.FLOAT.fieldOf("speed").forGetter(BubbleInfo::speed),
+            Codec.INT.fieldOf("speed").forGetter(BubbleInfo::speed),
             Codec.INT.fieldOf("range").forGetter(BubbleInfo::range),
             Codec.STRING.fieldOf("shader").forGetter(BubbleInfo::shader),
             Codec.BOOL.fieldOf("changes_time").forGetter(BubbleInfo::changesTime),
@@ -31,7 +31,7 @@ public record BubbleInfo(float speed, int range, String shader, boolean changesT
 
 
     public static class Builder {
-        private float speed;
+        private int speed;
         private int range;
         private String shader;
         private boolean changesTime;
@@ -49,7 +49,7 @@ public record BubbleInfo(float speed, int range, String shader, boolean changesT
             this.postUniforms = new HashMap<>(info.postUniforms);
         }
 
-        public Builder speed(float speed) {
+        public Builder speed(int speed) {
             this.speed = speed;
             return this;
         };
@@ -81,6 +81,16 @@ public record BubbleInfo(float speed, int range, String shader, boolean changesT
 
         public Builder postUniform(String name, List<Float> values) {
             postUniforms.put(name, values);
+            return this;
+        }
+
+        public Builder clearUniforms() {
+            uniforms.clear();
+            return this;
+        }
+
+        public Builder clearPostUniforms() {
+            postUniforms.clear();
             return this;
         }
 

@@ -67,7 +67,7 @@ public class BubbleLife {
     public static final DeferredItem<Item> BUBBLE_ITEM = ITEMS.registerItem("bubble", (properties) -> new BubbleItem(
             new Item.Properties().stacksTo(1).component(BUBBLE_INFO::value, new BubbleInfo())
     ));
-    public static final DeferredItem<BlockItem> BUBBLE_WORKSHOP_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("example_block", BUBBLE_WORKSHOP_BLOCK);
+    public static final DeferredItem<BlockItem> BUBBLE_WORKSHOP_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("bubble_workshop", BUBBLE_WORKSHOP_BLOCK);
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MODID);
     public static final DeferredHolder<EntityType<?>, EntityType<Bubble>> BUBBLE = ENTITIES.register("bubble",

@@ -16,6 +16,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.*;
 import net.minecraft.commands.Commands;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -23,6 +24,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.joml.Matrix4f;
@@ -89,10 +91,10 @@ public class BubbleLifeClient {
 
         @SubscribeEvent
         public static void onCommandsRegister(RegisterClientCommandsEvent event) {
-            event.getDispatcher().register(Commands.literal("reloads").executes((context) -> {
-                createBubbleShader();
-                return 1;
-            }));
+//            event.getDispatcher().register(Commands.literal("reloads").executes((context) -> {
+//                createBubbleShader();
+//                return 1;
+//            }));
         }
 
         @SubscribeEvent
@@ -127,6 +129,14 @@ public class BubbleLifeClient {
         private static void onRegisterScreens(RegisterMenuScreensEvent event) {
             MenuScreens.ScreenConstructor<BubbleWorkshopMenu, BubbleWorkshopScreen> constructor = BubbleWorkshopScreen::new;
             event.register(BubbleLife.BUBBLE_WORKSHOP_MENU.get(), constructor);
+        }
+
+        @SubscribeEvent
+        public static void buildContents(BuildCreativeModeTabContentsEvent event) {
+            if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+                event.accept(BubbleLife.BUBBLE_WORKSHOP_BLOCK.get());
+                event.accept(BubbleLife.BUBBLE_ITEM.get());
+            }
         }
     }
 

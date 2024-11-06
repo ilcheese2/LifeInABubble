@@ -6,5 +6,9 @@
   "menu.bubblelife.workshop.speed": "Speed ",
   "menu.bubblelife.workshop.changes_time": "Changes Time ",
   "menu.bubblelife.workshop.shaders": "Shaders",
-  "menu.bubblelife.workshop.uniforms": "Uniforms"
+  "menu.bubblelife.workshop.uniforms": "Uniforms",
+  "bubble_shaders.bubblelife.flag.name": "Flag",
+  "bubble_shaders.bubblelife.flag.description": "A flag with customizable vertical stripes",
+  "bubble_shaders.bubblelife.red.name": "Color",
+  "bubble_shaders.bubblelife.red.description": "Self-explanatory"
 }

@@ -4,7 +4,8 @@
     "1": "block/amethyst_block",
     "2": "block/polished_basalt_top",
     "3": "block/polished_basalt_side",
-    "4": "bubblelife:block/workshop_top"
+    "4": "bubblelife:block/workshop_top",
+    "particle": "block/amethyst_block"
   },
   "render_type": "minecraft:cutout",
   "elements": [

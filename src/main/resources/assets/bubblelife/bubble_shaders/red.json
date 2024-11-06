@@ -2,5 +2,7 @@
   "shader": "red",
   "uniforms": {
     "color" : [0.0, 0.0, 1.0]
-  }
+  },
+  "name": "bubble_shaders.bubblelife.red.name",
+  "description": "bubble_shaders.bubblelife.red.description"
 }

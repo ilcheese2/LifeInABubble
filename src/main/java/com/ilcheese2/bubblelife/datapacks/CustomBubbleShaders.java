@@ -22,7 +22,7 @@ public class CustomBubbleShaders extends SimpleJsonResourceReloadListener {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final List<BubbleShader> SHADERS = new ArrayList<>();
-    private static final Map<String, Integer> SHADERS_MAP = new HashMap<>();
+    private static final Map<String, Integer> SHADERS_MAP = new LinkedHashMap<>();
     public static final Map<String, Pair<PostShaderInfo, PostChain>> POST_SHADERS = new LinkedHashMap<>();
 
 
@@ -81,7 +81,7 @@ public class CustomBubbleShaders extends SimpleJsonResourceReloadListener {
                     Resource resource = shaderResource.values().stream().findFirst().get();
                     String shaderName = location.getNamespace() + ":" + shaderLoc;
                     InputStream stream = resource.open();
-                    SHADERS.add(new BubbleShader(shaderName, stream, convertIntermediate(uniforms)));
+                    SHADERS.add(new BubbleShader(shaderName, json.get("name").getAsString(), json.get("description").getAsString(), stream, convertIntermediate(uniforms)));
                     SHADERS_MAP.put(SHADERS.getLast().name, SHADERS.size() - 1);
                     stream.close();
                 }
@@ -94,7 +94,7 @@ public class CustomBubbleShaders extends SimpleJsonResourceReloadListener {
 
     // name, offset, (start in vec4, size)
     private Map<String, BubbleUniform> convertIntermediate(List<BubbleUniform.Intermediate> uniforms) { // require order
-        Map<String, BubbleUniform> result = new HashMap<>();
+        Map<String, BubbleUniform> result = new LinkedHashMap<>();
         int sizeCount = 0;
         for (var uniform : uniforms) {
             if (uniform.size > 4) {

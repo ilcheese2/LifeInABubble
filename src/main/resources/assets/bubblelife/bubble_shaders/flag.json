@@ -1,3 +1,16 @@
 {
-  "shader": "flag"
+  "shader": "flag",
+  "name": "bubble_shaders.bubblelife.flag.name",
+  "description": "bubble_shaders.bubblelife.flag.description",
+  "uniforms":{
+    "colorCount": [6],
+    "color1" : [0.95, 0.0, 0.0],
+    "color2" : [1.0, 0.5529411764705883, 0.0],
+    "color3" : [1.0, 0.95, 0.0],
+    "color4" : [0.0, 0.5058823529411764, 0.12941176470588237],
+    "color5" : [0.0, 0.2980392156862745, 1.0],
+    "color6" : [0.4627450980392157, 0.0, 0.5333333333333333],
+    "color7" : [0.0, 0.0, 0.0],
+    "color8" : [0.0, 0.0, 0.0]
+  }
 }

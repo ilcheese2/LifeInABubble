@@ -83,7 +83,7 @@ public class BubbleControllerClient extends BubbleController {
             bubbleData.put((float) 0xDEADC0DE);
 
             shader.uniforms.forEach((name, value) -> {
-                bubbleData.position(finalI + value.offset + value.innerOffset);
+                bubbleData.position(finalI + 4 * value.offset + value.innerOffset);
                 if (bubbleData.remaining() < 4) {
                     //DetachedTimes.LOGGER.warn("Too many bubbles to render, consider increasing the buffer size");
                     return; // ok

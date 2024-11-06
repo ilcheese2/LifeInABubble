@@ -38,7 +38,7 @@ public class BubbleUniform {
         StringBuilder builder = new StringBuilder();
         int i = this.innerOffset;
 
-        while (i < size) {
+        while (i < size + innerOffset) {
             builder.append(swizzle[i]);
             i++;
         }
