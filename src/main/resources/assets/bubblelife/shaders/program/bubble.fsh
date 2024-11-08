@@ -71,17 +71,10 @@ void main() {
     float depth = texture(DepthSampler, texCoord).r;
     vec3 worldPos = toWorldSpace(vec3(texCoord, depth));
 
-    vec3 sphereCenter = vec3(-67, 65, 261);
-    vec3 sphereCenter2 = vec3(-62, 75, 253);
-
-    vec3[] sphereCenters = vec3[](sphereCenter, sphereCenter2);
-    vec4[] sphereColors = vec4[](vec4(1, 0, 0, 1), vec4(0, 1, 0, 1));
-
     float terrainDistance = distance(CamPos, worldPos);
 
     vec4 a = vec4(0);
     float minDist = 10000.0;
-    fragColor = a;
 
     for (int i = 0; i < BubbleCount; i++) {
         vec3 normal;
@@ -94,7 +87,6 @@ void main() {
             a = sphereTexture(normal, BubbleOffsets[i], int(color.x)); // waste three bytes smh
         }
     }
-
 
 
     fragColor =  0.4 * a + texture(DiffuseSampler, texCoord) * ColorModulate;

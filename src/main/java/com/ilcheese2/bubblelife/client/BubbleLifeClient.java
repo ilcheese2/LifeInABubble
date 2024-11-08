@@ -69,7 +69,9 @@ public class BubbleLifeClient {
                 if ( bubbleShader != null) {
                     EffectInstance effect = ((PostChainAccessor) bubbleShader).getPasses().getFirst().getEffect();
                     effect.setSampler("DataSampler", () -> BubbleControllerClient.instance().dataTexture);
-                    bubbleShader.process(event.getPartialTick().getGameTimeDeltaTicks());
+                    if (!Minecraft.getInstance().isPaused()) {
+                        bubbleShader.process(event.getPartialTick().getGameTimeDeltaTicks());
+                    }
                 }
                 Bubble bubble = BubbleControllerClient.instance().inBubblePosition(Minecraft.getInstance().player.position());
                 if (bubble != null) {
@@ -161,7 +163,6 @@ public class BubbleLifeClient {
 
             bubbleShader.resize(client.getWindow().getWidth(), client.getWindow().getHeight());
             BubbleControllerClient.instance().updateShader();
-            EffectInstance effect = ((PostChainAccessor) bubbleShader).getPasses().getFirst().getEffect();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -174,7 +175,6 @@ public class BubbleLifeClient {
         effect.safeGetUniform("CamPos").set(Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().toVector3f());
         effect.safeGetUniform("ProjInvMat").set(new Matrix4f(RenderSystem.getProjectionMatrix()).invert());
         effect.safeGetUniform("ModelViewInvMat").set(new Matrix4f(matrix).invert());
-        //effect.safeGetUniform("ModelViewInvMat").set( new Matrix4f(RenderSystem.getModelViewMatrix()).invert());
         effect.setSampler("DepthSampler", () -> Minecraft.getInstance().getMainRenderTarget().getDepthTextureId());
 
     }
